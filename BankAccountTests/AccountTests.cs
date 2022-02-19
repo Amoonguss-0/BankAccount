@@ -25,7 +25,7 @@ namespace BankAccount.Tests
         [DataRow(.01)]
         [DataRow(1.99)]
         [DataRow(9_999.99)]
-        public void Desposit_APositiveAmount_A(double depositAmount)
+        public void Deposit_APositiveAmount_AddsToBalance(double depositAmount)
         {
             // Arrange
             acc.Deposit(depositAmount);
@@ -34,7 +34,7 @@ namespace BankAccount.Tests
         }
 
         [TestMethod]
-        public void Desposit_APositiveAmount_ReturnsUpdatedBalance()
+        public void Deposit_APositiveAmount_ReturnsUpdatedBalance()
         {
             // Arrange
             double depositAmount = 100; 
@@ -81,7 +81,48 @@ namespace BankAccount.Tests
 
             // Assert
             Assert.AreEqual(expectedBalance, actualBalance);
+        }
 
+        [TestMethod]
+        public void Withdraw_PositiveAmount_ReturnsUpdatedBalance()
+        {
+            // Arrange
+            double balance = 200;
+            double withdrawalAmount = 100;
+            double expectedReturn = 100;
+
+            // Act
+            double returnValue = balance - withdrawalAmount;
+
+            // Assert
+            Assert.AreEqual(expectedReturn, returnValue);
+        }
+
+        [TestMethod]
+        [DataRow(0)]
+        [DataRow(-.01)]
+        [DataRow(-1000)]
+        public void Withdraw_ZeroOrLess_ThrowsArgumentOutOfRangeException(double invalidWithdrawal)
+        {
+            // Assert
+            Assert.ThrowsException<ArgumentOutOfRangeException>
+                (() => acc.Withdraw(invalidWithdrawal));
+        }
+
+        [TestMethod]
+        public void Withdraw_MoreThanAvailableBalance_ThrowsArgumentException()
+        {
+            // Arrange
+            double balance = 200;
+            double withdrawalAmount = 300;
+
+
+            // Act Assert
+            if (withdrawalAmount > balance)
+            {
+                Assert.ThrowsException<ArgumentException>
+                (() => acc.Withdraw(withdrawalAmount));
+            }
         }
     }
 }
